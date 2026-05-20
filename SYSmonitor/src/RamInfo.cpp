@@ -10,7 +10,7 @@ struct RAMstats {
 RAMstats getRamInfo();
 double toGB(DWORDLONG inBytes);
 double getUsed(RAMstats info);
-double getUsedProcent(RAMstats info);
+double getUsedPercent(RAMstats info);
 void printInfo(RAMstats info);
 
 int main() {
@@ -21,7 +21,9 @@ int main() {
 RAMstats getRamInfo() {
 	MEMORYSTATUSEX memInfo;
 	memInfo.dwLength = sizeof(MEMORYSTATUSEX); 
-	GlobalMemoryStatusEx(&memInfo);
+	if (!GlobalMemoryStatusEx(&memInfo)) {
+		throw std::runtime_error("Failed to get memory info");
+	}
 	return RAMstats(memInfo.ullTotalPhys, memInfo.ullAvailPhys);
 }
 
@@ -30,11 +32,10 @@ double toGB(DWORDLONG inBytes) {
 }
 
 double getUsed(RAMstats info) {
-	if (info.totalAvailRam > info.totalPhysRam) return 0.0;
 	return static_cast<double>(info.totalPhysRam - info.totalAvailRam);
 }
 
-double getUsedProcent(RAMstats info) {
+double getUsedPercent(RAMstats info) {
 	return (static_cast<double>(info.totalPhysRam - info.totalAvailRam) / info.totalPhysRam) * 100.0;
 }
 
@@ -43,5 +44,5 @@ void printInfo(RAMstats info) {
 	std::cout << "Total: " << toGB(info.totalPhysRam) << "GB" << std::endl;
 	std::cout << "Available: " << toGB(info.totalAvailRam) << "GB" << std::endl;
 	std::cout << "used: " << toGB(getUsed(info)) << "GB" << std::endl;
-	std::cout << "in Procent: " << getUsedProcent(info) << "%\n";
+	std::cout << "in Percent: " << getUsedPercent(info) << "%\n";
 }

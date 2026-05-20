@@ -167,8 +167,14 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CpuInfo.cpp" />
+    <ClCompile Include="src\Monitor.cpp" />
     <ClCompile Include="src\RamInfo.cpp" />
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\CpuInfo.h" />
+    <ClInclude Include="src\RamInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

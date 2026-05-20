@@ -21,5 +21,19 @@
     <ClCompile Include="src\RamInfo.cpp">
       <Filter>Ressourcendateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\Monitor.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CpuInfo.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\RamInfo.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CpuInfo.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

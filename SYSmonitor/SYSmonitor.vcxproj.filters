@@ -18,7 +18,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Ressourcendateien</Filter>
     </ClCompile>
-    <ClCompile Include="RamInfo.cpp">
+    <ClCompile Include="src\RamInfo.cpp">
       <Filter>Ressourcendateien</Filter>
     </ClCompile>
   </ItemGroup>

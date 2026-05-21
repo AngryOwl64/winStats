@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="SYSmonitor/SYSmonitor.vcxproj" />
+  <Project Path="SYSmonitor/SYSmonitor.vcxproj" Id="2b797eb4-7239-49f2-8509-067e54534acd" />
 </Solution>

@@ -4,6 +4,7 @@
 
 int main() {
 	auto now = std::chrono::steady_clock::now();
+	SingleCore();
 	while (true) {
 		CpuSnapshot oldTimes = CpuCalc::GetCpuTimes();
 		auto startTime = std::chrono::steady_clock::now();
@@ -17,6 +18,16 @@ int main() {
 			now = std::chrono::steady_clock::now();
 		} while (now - startTime < std::chrono::milliseconds(1000));
 	}
+}
+
+int SingleCore() {
+	LOGICAL_PROCESSOR_RELATIONSHIP type = RelationProcessorCore;
+	DWORD length = 0;
+	GetLogicalProcessorInformationEx(type, NULL, &length);
+	if (length == 0) return 0;
+	std::vector<byte> buffer(length);
+	auto var = GetLogicalProcessorInformationEx(type, reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(buffer.data()), &length);
+	std::cout << var << std::endl;
 }
 
 namespace CpuCalc {

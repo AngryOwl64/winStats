@@ -8,6 +8,7 @@ struct CpuSnapshot {
 	ULONGLONG kernel;
 	ULONGLONG user;
 };
+int SingleCore();
 
 namespace CpuCalc {
 	CpuSnapshot GetCpuTimes();

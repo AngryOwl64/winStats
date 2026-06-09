@@ -5,7 +5,7 @@
 
 int main() {
 	auto now = std::chrono::steady_clock::now();
-	SingleCore();
+	getCpuTopo();
 	while (true) {
 		CpuSnapshot oldTimes = CpuCalc::GetCpuTimes();
 		auto startTime = std::chrono::steady_clock::now();
@@ -21,12 +21,12 @@ int main() {
 	}
 }
 
-int SingleCore() {
+std::vector<CoreInfo> getCpuTopo() {
 	std::vector<CoreInfo> coresInfo;
 	LOGICAL_PROCESSOR_RELATIONSHIP type = RelationProcessorCore;
 	DWORD length = 0;
 	GetLogicalProcessorInformationEx(type, NULL, &length);
-	if (length == 0) return 0;
+	if (length == 0) return std::vector<CoreInfo>();
 	std::vector<byte> buffer(length);
 	auto var = GetLogicalProcessorInformationEx(type, reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(buffer.data()), &length);
 	if (var) {
@@ -43,13 +43,9 @@ int SingleCore() {
 					auto mask = groupMask.Mask;
 					for (int bit{}; bit < 64; bit++) {
 						if (mask & (1ull << bit)) {
-							std::cout << "Logischer CPU CORE: " << bit << std::endl;
 							core.logicProcessors.push_back(bit);
 						}
 					}
-
-					std::cout << "Group: " << groupMask.Group << std::endl;
-					std::cout << "Mask: " << groupMask.Mask << std::endl;
 				}
 				coresInfo.push_back(core);
 			}
@@ -57,8 +53,13 @@ int SingleCore() {
 		}
 	}
 	for (auto var : coresInfo) {
-		std::cout << "core: " << var.group << "\tcores: " << var.logicProcessors[0] << " " << var.logicProcessors[1] << std::endl;
+		std::cout << "group: " << var.group << "\tcores: " << var.logicProcessors[0] << " " << var.logicProcessors[1] << std::endl;
 	}
+	return coresInfo;
+}
+
+
+std::vector<CpuSnapshot> getLogicalProccInfos() {
 }
 
 namespace CpuCalc {

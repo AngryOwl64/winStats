@@ -16,6 +16,7 @@ struct CpuSnapshot {
 };
 
 std::vector<CoreInfo> getCpuTopo();
+std::vector<CpuSnapshot> getLogicalProccInfos();
 
 namespace CpuCalc {
 	CpuSnapshot GetCpuTimes();

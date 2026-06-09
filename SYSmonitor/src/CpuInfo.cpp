@@ -1,6 +1,7 @@
 #include "CpuInfo.h"
 #include <chrono>
 
+#define LOG(x) std::cout << x << std::endl;
 
 int main() {
 	auto now = std::chrono::steady_clock::now();
@@ -12,7 +13,7 @@ int main() {
 			now = std::chrono::steady_clock::now();
 		} while (now - startTime < std::chrono::milliseconds(500));
 		CpuSnapshot newTimes = CpuCalc::GetCpuTimes();
-		std::cout << CpuCalc::calculateCpuUsage(oldTimes, newTimes) << std::endl;
+		//std::cout << CpuCalc::calculateCpuUsage(oldTimes, newTimes) << std::endl;
 		do
 		{
 			now = std::chrono::steady_clock::now();
@@ -27,7 +28,30 @@ int SingleCore() {
 	if (length == 0) return 0;
 	std::vector<byte> buffer(length);
 	auto var = GetLogicalProcessorInformationEx(type, reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(buffer.data()), &length);
-	std::cout << var << std::endl;
+	if (var) {
+		BYTE* ptr = buffer.data();
+		BYTE* end = buffer.data() + length;
+		while (ptr < end) {
+			auto info = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(ptr);
+			if (info->Relationship == RelationProcessorCore) {
+				LOG("LOG: core successfully found");
+				for (size_t i{}; i < info->Processor.GroupCount; i++) {
+					auto groupMask = info->Processor.GroupMask[i];
+					
+					auto mask = groupMask.Mask;
+					for (int bit{}; bit < 64; bit++) {
+						if (mask & (1ull << bit)) {
+							std::cout << "Logischer CPU CORE: " << bit << std::endl;
+						}
+					}
+
+					std::cout << "Group: " << groupMask.Group << std::endl;
+					std::cout << "Mask: " << groupMask.Mask << std::endl;
+				}
+			}
+			ptr += info->Size;
+		}
+	}
 }
 
 namespace CpuCalc {

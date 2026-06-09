@@ -56,6 +56,9 @@ int SingleCore() {
 			ptr += info->Size;
 		}
 	}
+	for (auto var : coresInfo) {
+		std::cout << "core: " << var.group << "\tcores: " << var.logicProcessors[0] << " " << var.logicProcessors[1] << std::endl;
+	}
 }
 
 namespace CpuCalc {

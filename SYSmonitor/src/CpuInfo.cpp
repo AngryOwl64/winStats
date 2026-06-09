@@ -22,6 +22,7 @@ int main() {
 }
 
 int SingleCore() {
+	std::vector<CoreInfo> coresInfo;
 	LOGICAL_PROCESSOR_RELATIONSHIP type = RelationProcessorCore;
 	DWORD length = 0;
 	GetLogicalProcessorInformationEx(type, NULL, &length);
@@ -34,20 +35,23 @@ int SingleCore() {
 		while (ptr < end) {
 			auto info = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(ptr);
 			if (info->Relationship == RelationProcessorCore) {
+				CoreInfo core;
 				LOG("LOG: core successfully found");
 				for (size_t i{}; i < info->Processor.GroupCount; i++) {
 					auto groupMask = info->Processor.GroupMask[i];
-					
+					core.group = groupMask.Group;
 					auto mask = groupMask.Mask;
 					for (int bit{}; bit < 64; bit++) {
 						if (mask & (1ull << bit)) {
 							std::cout << "Logischer CPU CORE: " << bit << std::endl;
+							core.logicProcessors.push_back(bit);
 						}
 					}
 
 					std::cout << "Group: " << groupMask.Group << std::endl;
 					std::cout << "Mask: " << groupMask.Mask << std::endl;
 				}
+				coresInfo.push_back(core);
 			}
 			ptr += info->Size;
 		}

@@ -59,7 +59,8 @@ std::vector<CoreInfo> getCpuTopo() {
 }
 
 
-std::vector<CpuSnapshot> getLogicalProccInfos() {
+std::vector<CpuSnapshot> getLogicalCoreTimes() {
+	return std::vector<CpuSnapshot>();
 }
 
 namespace CpuCalc {

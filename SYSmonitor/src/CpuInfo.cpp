@@ -4,6 +4,7 @@
 #define LOG(x) std::cout << x << std::endl;
 
 int main() {
+	getLogicalCoreTimes();
 	auto now = std::chrono::steady_clock::now();
 	getCpuTopo();
 	while (true) {
@@ -60,6 +61,18 @@ std::vector<CoreInfo> getCpuTopo() {
 
 
 std::vector<CpuSnapshot> getLogicalCoreTimes() {
+	DWORD processorCount = GetActiveProcessorCount(ALL_PROCESSOR_GROUPS); 
+	std::vector<SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION> infos(processorCount);
+	std::cout << "[LOG]: Found " << processorCount << " threads\n";
+	NTSTATUS status = NtQuerySystemInformation(SystemProcessorPerformanceInformation,
+		infos.data(),
+		static_cast<ULONG>(infos.size() * sizeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION)),
+		nullptr
+		);
+	if (status != 0) {
+		LOG("Error while collection system data (cpu)");
+		return {};
+	}
 	return std::vector<CpuSnapshot>();
 }
 

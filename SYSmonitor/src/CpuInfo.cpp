@@ -3,7 +3,7 @@
 
 #define LOG(x) std::cout << x << std::endl;
 
-int main() {
+int maindddd() {
 	getLogicalCoreTimes();
 	auto now = std::chrono::steady_clock::now();
 	getCpuTopo();
@@ -14,7 +14,7 @@ int main() {
 			now = std::chrono::steady_clock::now();
 		} while (now - startTime < std::chrono::milliseconds(500));
 		CpuSnapshot newTimes = CpuCalc::GetCpuTimes();
-		//std::cout << CpuCalc::calculateCpuUsage(oldTimes, newTimes) << std::endl;
+		std::cout << CpuCalc::calculateCpuUsage(oldTimes, newTimes) << std::endl;
 		do
 		{
 			now = std::chrono::steady_clock::now();
@@ -37,7 +37,7 @@ std::vector<CoreInfo> getCpuTopo() {
 			auto info = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(ptr);
 			if (info->Relationship == RelationProcessorCore) {
 				CoreInfo core;
-				LOG("LOG: core successfully found");
+				//LOG("LOG: core successfully found");
 				for (size_t i{}; i < info->Processor.GroupCount; i++) {
 					auto groupMask = info->Processor.GroupMask[i];
 					core.group = groupMask.Group;
@@ -54,7 +54,7 @@ std::vector<CoreInfo> getCpuTopo() {
 		}
 	}
 	for (auto var : coresInfo) {
-		std::cout << "group: " << var.group << "\tcores: " << var.logicProcessors[0] << " " << var.logicProcessors[1] << std::endl;
+		//std::cout << "group: " << var.group << "\tcores: " << var.logicProcessors[0] << " " << var.logicProcessors[1] << std::endl;
 	}
 	return coresInfo;
 }
@@ -95,5 +95,12 @@ namespace CpuCalc {
 		auto kernel = (static_cast<ULONGLONG>(kernelTime.dwHighDateTime) << 32) | kernelTime.dwLowDateTime;
 		auto user = (static_cast<ULONGLONG>(userTime.dwHighDateTime) << 32) | userTime.dwLowDateTime;
 		return CpuSnapshot(idle, kernel, user);
+	}
+
+	void printThreadsandCores() {
+		DWORD processorCount = GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
+		std::vector<SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION> infos(processorCount);
+		std::cout << "Cores: " << processorCount / 2 << std::endl;
+		std::cout << "Threads: " << processorCount << std::endl;
 	}
 }
